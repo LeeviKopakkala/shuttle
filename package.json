@@ -1,0 +1,24 @@
+{
+  "name": "shuttle",
+  "version": "1.0.0",
+  "description": "Shuttle, Node.js API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeeviKopakkala/shuttle.git"
+  },
+  "keywords": [
+    "API",
+    "Node",
+    "Express"
+  ],
+  "author": "Leevi Kopakkala",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LeeviKopakkala/shuttle/issues"
+  },
+  "homepage": "https://github.com/LeeviKopakkala/shuttle#readme"
+}
