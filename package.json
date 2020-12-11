@@ -20,5 +20,22 @@
   "bugs": {
     "url": "https://github.com/LeeviKopakkala/shuttle/issues"
   },
-  "homepage": "https://github.com/LeeviKopakkala/shuttle#readme"
+  "homepage": "https://github.com/LeeviKopakkala/shuttle#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.3.5"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-load-plugins": "^2.0.6",
+    "gulp-nodemon": "^2.5.0",
+    "gulp-plumber": "^1.2.1"
+  }
 }
