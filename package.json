@@ -1,41 +1,41 @@
 {
-  "name": "shuttle",
+  "name": "shuttle-ts",
   "version": "1.0.0",
-  "description": "Shuttle, Node.js API",
-  "main": "index.js",
+  "description": "",
+  "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/index.js",
+    "dev": "tsc -w & nodemon dist/index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/LeeviKopakkala/shuttle.git"
-  },
-  "keywords": [
-    "API",
-    "Node",
-    "Express"
-  ],
-  "author": "Leevi Kopakkala",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/LeeviKopakkala/shuttle/issues"
-  },
-  "homepage": "https://github.com/LeeviKopakkala/shuttle#readme",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "express": "^4.17.1",
-    "jsonwebtoken": "^8.5.1",
-    "mysql2": "^2.2.5",
-    "sequelize": "^6.3.5"
-  },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-2": "^6.24.1",
-    "gulp": "^4.0.2",
-    "gulp-babel": "^8.0.0",
-    "gulp-load-plugins": "^2.0.6",
-    "gulp-nodemon": "^2.5.0",
-    "gulp-plumber": "^1.2.1"
+    "@prisma/cli": "^2.13.0",
+    "@types/body-parser": "^1.19.0",
+    "@types/compression": "^1.7.0",
+    "@types/cors": "^2.8.9",
+    "@types/express": "^4.17.9",
+    "@typescript-eslint/eslint-plugin": "^4.9.1",
+    "@typescript-eslint/parser": "^4.9.1",
+    "eslint": "^7.15.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "ts-node": "^9.1.1",
+    "tsc": "^1.20150623.0",
+    "tslint": "^6.1.3",
+    "typescript": "^4.1.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^2.13.0",
+    "@types/bcrypt": "^3.0.0",
+    "@types/passport": "^1.0.4",
+    "bcrypt": "^5.0.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "express": "4.17.0",
+    "jsonwebtoken": "^8.5.1",
+    "passport": "^0.4.1"
   }
 }
