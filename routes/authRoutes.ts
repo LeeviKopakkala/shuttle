@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import AuthController from '../controllers/authController';
 import UserController from '../controllers/userController';
-import Validator from '../validations/validator';
+import Validator from '../middlewares/validators/validator';
 
 class AuthRoutes {
   public router: Router;

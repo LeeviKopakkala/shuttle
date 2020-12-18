@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var authController_1 = __importDefault(require("../controllers/authController"));
 var userController_1 = __importDefault(require("../controllers/userController"));
-var validator_1 = __importDefault(require("../validations/validator"));
+var validator_1 = __importDefault(require("../middlewares/validators/validator"));
 var AuthRoutes = /** @class */ (function () {
     function AuthRoutes() {
         this.authController = new authController_1.default();
