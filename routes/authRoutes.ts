@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import AuthController from '../controllers/authController';
 import UserController from '../controllers/userController';
+import Validator from '../validations/validator';
 
 class AuthRoutes {
   public router: Router;
@@ -9,13 +10,17 @@ class AuthRoutes {
 
   public userController: UserController = new UserController();
 
+  public validator: Validator = new Validator();
+
   constructor() {
     this.router = Router();
     this.routes();
   }
 
   routes() {
-    this.router.post('/signup', this.userController.registerUser.bind(this.userController));
+    this.router.post('/signup', this.validator.validateUser, this.userController.registerUser.bind(this.userController));
+
+    // this.router.post('/login', this.userController.authenticateUser);
   }
 }
 
