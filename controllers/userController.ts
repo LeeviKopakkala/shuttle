@@ -15,6 +15,7 @@ class UserController {
     const user:IUser = {
       email: req.body.email,
       name: req.body.name,
+      username: req.body.username,
     };
 
     const hashedPassword = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
@@ -27,6 +28,7 @@ class UserController {
         data: {
           name: user.name,
           email: user.email,
+          username: user.username,
           password: hashedPassword,
         },
       });
