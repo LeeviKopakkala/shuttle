@@ -5,6 +5,7 @@ class Validator {
       body('email').isEmail().withMessage('Check your email'),
       body('password').isLength({ min: 6 }).withMessage('Password minimum length: 6'),
       body('name').isLength({ min: 2 }).withMessage('Check your name'),
+      body('username').isLength({ min: 2 }).withMessage('Check your username'),
       this.errorCheck,
     ];
 

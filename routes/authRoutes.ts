@@ -17,7 +17,7 @@ class AuthRoutes {
   routes() {
     this.router.post('/signup', this.validator.validateUser, this.userController.registerUser.bind(this.userController));
 
-    // this.router.post('/login', this.userController.authenticateUser);
+    this.router.post('/login', this.userController.authenticateUser.bind(this.userController));
   }
 }
 

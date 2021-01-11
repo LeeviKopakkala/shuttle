@@ -23,15 +23,21 @@ const isCorrectPassword = (password: string, existing: string) => {
 
 passport.use(new LocalStrategy({ usernameField: 'username' }, async (username: any, password: any, done: any) => {
   const usernameString = username;
-  const user = await prisma.user.findUnique({
+  prisma.user.findUnique({
     where: { username: usernameString },
+  }).then((user) => {
+    console.log(user);
+    if (!user) {
+      return done(undefined, false, { message: `username ${username} not found.` });
+    }
+    if (isCorrectPassword(password, user.password)) {
+      return done(undefined, user);
+    }
+    return done(undefined, false, { message: 'invalid username or password' });
+  }).catch((error) => {
+    console.log(error);
+    return done(undefined, false);
   });
-  if (!user) {
-    return done(undefined, false, { message: `username ${username} not found.` });
-  }
-  if (isCorrectPassword(password, user.password)) {
-    return done(undefined, user);
-  }
   return done(undefined, false, { message: 'invalid username or password' });
 
   /* User.findOne({ username: username.toLowerCase() }, (err: any, user: any) => {
@@ -54,12 +60,16 @@ passport.use(new JwtStrategy(
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: config.JWT_SECRET,
   }, (async (jwtToken, done) => {
-    const user = await prisma.user.findUnique({
+    prisma.user.findUnique({
       where: { username: jwtToken.username },
+    }).then((user) => {
+      if (user) {
+        return done(undefined, user, jwtToken);
+      }
+      return done(undefined, false);
+    }).catch((error) => {
+      console.log(error);
+      return done(undefined, false);
     });
-    if (user) {
-      return done(undefined, user, jwtToken);
-    }
-    return done(undefined, false);
   }),
 ));

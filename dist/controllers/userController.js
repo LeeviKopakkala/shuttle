@@ -1,4 +1,34 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -41,6 +71,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var client_1 = require("@prisma/client");
 var bcrypt_1 = __importDefault(require("bcrypt"));
+// import passport from 'passport';
+// import LocalStrategy from 'passport-local';
+var jwt = __importStar(require("jsonwebtoken"));
+var config_1 = __importDefault(require("../configs/config"));
 var UserController = /** @class */ (function () {
     function UserController() {
         this.prisma = new client_1.PrismaClient();
@@ -59,6 +93,7 @@ var UserController = /** @class */ (function () {
                         user = {
                             email: req.body.email,
                             name: req.body.name,
+                            username: req.body.username,
                         };
                         hashedPassword = bcrypt_1.default.hashSync(req.body.password, bcrypt_1.default.genSaltSync(10));
                         return [4 /*yield*/, this.findUserByEmail(user.email)];
@@ -71,6 +106,7 @@ var UserController = /** @class */ (function () {
                             data: {
                                 name: user.name,
                                 email: user.email,
+                                username: user.username,
                                 password: hashedPassword,
                             },
                         })];
@@ -87,6 +123,38 @@ var UserController = /** @class */ (function () {
             });
         });
     };
+    UserController.prototype.authenticateUser = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var user;
+            var _this = this;
+            return __generator(this, function (_a) {
+                user = {
+                    email: req.body.email,
+                    password: req.body.password,
+                };
+                this.findUserByEmail(user.email).then(function (result) { return __awaiter(_this, void 0, void 0, function () {
+                    var isCorrectPassword, email, token, response;
+                    return __generator(this, function (_a) {
+                        if (result) {
+                            isCorrectPassword = bcrypt_1.default.compareSync(user.password, result === null || result === void 0 ? void 0 : result.password);
+                            console.log(isCorrectPassword);
+                            if (isCorrectPassword === true) {
+                                email = result === null || result === void 0 ? void 0 : result.email;
+                                token = jwt.sign({ email: email }, config_1.default.JWT_SECRET, {
+                                    expiresIn: 100000,
+                                });
+                                delete user.password;
+                                response = __assign({ email: user.email, username: result.username }, { token: token });
+                                return [2 /*return*/, res.status(200).json(response)];
+                            }
+                        }
+                        return [2 /*return*/, res.status(404).json({ error: 'Wrong username or password' })];
+                    });
+                }); });
+                return [2 /*return*/];
+            });
+        });
+    };
     /**
      * Find user by email
      * @param userEmail: User's email
@@ -97,13 +165,28 @@ var UserController = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.prisma.user.findUnique({
-                            select: { name: true, email: true },
+                            select: {
+                                name: true, email: true, username: true, password: true,
+                            },
                             where: { email: userEmail },
                         })];
                     case 1:
                         user = _a.sent();
                         return [2 /*return*/, user || false];
                 }
+            });
+        });
+    };
+    UserController.prototype.comparePassword = function (password, userPassword) {
+        return __awaiter(this, void 0, void 0, function () {
+            var hashedPassword;
+            return __generator(this, function (_a) {
+                hashedPassword = bcrypt_1.default.hashSync(password, bcrypt_1.default.genSaltSync(10));
+                if (hashedPassword === userPassword) {
+                    console.log({ hashed: hashedPassword, pwd: password });
+                    return [2 /*return*/, true];
+                }
+                return [2 /*return*/, false];
             });
         });
     };

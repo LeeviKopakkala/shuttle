@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+// import passport from 'passport';
+// import LocalStrategy from 'passport-local';
+import * as jwt from 'jsonwebtoken';
+import config from '../configs/config';
 import { IUser } from '../models/user';
 
 class UserController {
@@ -40,16 +44,51 @@ class UserController {
     }
   }
 
+  public async authenticateUser(req: Request, res: Response) {
+    const user = {
+      email: req.body.email,
+      password: req.body.password,
+    };
+    this.findUserByEmail(user.email).then(async (result) => {
+      if (result) {
+        const isCorrectPassword = bcrypt.compareSync(user.password, result?.password);
+        console.log(isCorrectPassword);
+        if (isCorrectPassword === true) {
+          const email = result?.email;
+          const token = jwt.sign({ email }, config.JWT_SECRET, {
+            expiresIn: 100000,
+          });
+          delete user.password;
+          const response = { email: user.email, username: result.username, ...{ token } };
+
+          return res.status(200).json(response);
+        }
+      }
+      return res.status(404).json({ error: 'Wrong username or password' });
+    });
+  }
+
   /**
    * Find user by email
    * @param userEmail: User's email
    */
   public async findUserByEmail(userEmail: string) {
     const user = await this.prisma.user.findUnique({
-      select: { name: true, email: true },
+      select: {
+        name: true, email: true, username: true, password: true,
+      },
       where: { email: userEmail },
     });
     return user || false;
+  }
+
+  private async comparePassword(password: string, userPassword: string) {
+    const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+    if (hashedPassword === userPassword) {
+      console.log({ hashed: hashedPassword, pwd: password });
+      return true;
+    }
+    return false;
   }
 }
 
