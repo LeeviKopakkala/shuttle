@@ -61,7 +61,7 @@ passport.use(new JwtStrategy(
     secretOrKey: config.JWT_SECRET,
   }, (async (jwtToken, done) => {
     prisma.user.findUnique({
-      where: { username: jwtToken.username },
+      where: { email: jwtToken.email },
     }).then((user) => {
       if (user) {
         return done(undefined, user, jwtToken);

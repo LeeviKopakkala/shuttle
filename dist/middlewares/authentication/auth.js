@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var passport_1 = __importDefault(require("passport"));
-require("../auth/passportHandler");
-var AuthController = /** @class */ (function () {
-    function AuthController() {
+require("../../auth/passportHandler");
+var AuthMiddleware = /** @class */ (function () {
+    function AuthMiddleware() {
     }
-    AuthController.prototype.authenticateJWT = function (req, res, next) {
+    AuthMiddleware.prototype.authenticateJWT = function (req, res, next) {
         passport_1.default.authenticate('jwt', function (err, user, info) {
             console.log(info);
             if (err) {
@@ -18,10 +18,11 @@ var AuthController = /** @class */ (function () {
             if (!user) {
                 return res.status(401).json({ status: 'error', code: 'unauthorized' });
             }
+            res.locals.user = user;
             return next();
         })(req, res, next);
     };
-    AuthController.prototype.authorizeJWT = function (req, res, next) {
+    AuthMiddleware.prototype.authorizeJWT = function (req, res, next) {
         passport_1.default.authenticate('jwt', function (err, user, jwtToken) {
             if (err) {
                 console.log(err);
@@ -33,11 +34,12 @@ var AuthController = /** @class */ (function () {
             var scope = req.baseUrl.split('/').slice(-1)[0];
             var authScope = jwtToken.scope;
             if (authScope && authScope.indexOf(scope) > -1) {
+                res.locals.user = user;
                 return next();
             }
             return res.status(401).json({ status: 'error', code: 'unauthorized' });
         })(req, res, next);
     };
-    return AuthController;
+    return AuthMiddleware;
 }());
-exports.default = AuthController;
+exports.default = AuthMiddleware;

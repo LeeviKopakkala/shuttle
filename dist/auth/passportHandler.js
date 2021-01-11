@@ -86,7 +86,7 @@ passport_1.default.use(new JwtStrategy({
 }, (function (jwtToken, done) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         prisma.user.findUnique({
-            where: { username: jwtToken.username },
+            where: { email: jwtToken.email },
         }).then(function (user) {
             if (user) {
                 return done(undefined, user, jwtToken);

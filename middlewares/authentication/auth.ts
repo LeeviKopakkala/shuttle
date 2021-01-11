@@ -1,8 +1,8 @@
 import { Response, Request, NextFunction } from 'express';
 import passport from 'passport';
-import '../auth/passportHandler';
+import '../../auth/passportHandler';
 
-class AuthController {
+class AuthMiddleware {
   public authenticateJWT(req: Request, res: Response, next: NextFunction) {
     passport.authenticate('jwt', (err, user, info) => {
       console.log(info);
@@ -13,6 +13,7 @@ class AuthController {
       if (!user) {
         return res.status(401).json({ status: 'error', code: 'unauthorized' });
       }
+      res.locals.user = user;
       return next();
     })(req, res, next);
   }
@@ -29,6 +30,7 @@ class AuthController {
       const scope = req.baseUrl.split('/').slice(-1)[0];
       const authScope = jwtToken.scope;
       if (authScope && authScope.indexOf(scope) > -1) {
+        res.locals.user = user;
         return next();
       }
       return res.status(401).json({ status: 'error', code: 'unauthorized' });
@@ -36,4 +38,4 @@ class AuthController {
   }
 }
 
-export default AuthController;
+export default AuthMiddleware;

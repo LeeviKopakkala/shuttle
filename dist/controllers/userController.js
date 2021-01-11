@@ -155,6 +155,14 @@ var UserController = /** @class */ (function () {
             });
         });
     };
+    UserController.prototype.getUser = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                console.log(res.locals.user);
+                return [2 /*return*/, res.status(400).json(res.locals.user)];
+            });
+        });
+    };
     /**
      * Find user by email
      * @param userEmail: User's email

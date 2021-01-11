@@ -68,6 +68,11 @@ class UserController {
     });
   }
 
+  public async getUser(req: Request, res: Response) {
+    console.log(res.locals.user);
+    return res.status(400).json(res.locals.user);
+  }
+
   /**
    * Find user by email
    * @param userEmail: User's email
